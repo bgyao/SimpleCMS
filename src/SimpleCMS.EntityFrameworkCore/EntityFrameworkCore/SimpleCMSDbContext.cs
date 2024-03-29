@@ -1,9 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SimpleCMS.CmsContents;
 using Volo.Abp.AuditLogging.EntityFrameworkCore;
 using Volo.Abp.BackgroundJobs.EntityFrameworkCore;
 using Volo.Abp.Data;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.EntityFrameworkCore;
+using Volo.Abp.EntityFrameworkCore.Modeling;
 using Volo.Abp.FeatureManagement.EntityFrameworkCore;
 using Volo.Abp.Identity;
 using Volo.Abp.Identity.EntityFrameworkCore;
@@ -24,6 +26,7 @@ public class SimpleCMSDbContext :
     ITenantManagementDbContext
 {
     /* Add DbSet properties for your Aggregate Roots / Entities here. */
+    public DbSet<CmsContent> CmsContents { get; set; }
 
     #region Entities from the modules
 
@@ -82,5 +85,19 @@ public class SimpleCMSDbContext :
         //    b.ConfigureByConvention(); //auto configure for the base class props
         //    //...
         //});
+        ConfigureCmsContents(builder);
+    }
+
+    protected void ConfigureCmsContents(ModelBuilder builder)
+    {
+        builder.Entity<CmsContent>( b =>
+        {
+            b.ToTable(SimpleCMSConsts.DbTablePrefix + "CmsContents", SimpleCMSConsts.DbSchema);
+            b.ConfigureByConvention();
+            b.Property(x => x.Title).IsRequired().HasMaxLength(128);
+            b.Property(x => x.Subtitle).HasMaxLength(128);
+            b.Property(x => x.Content).IsRequired().HasMaxLength(int.MaxValue);
+            b.Property(x => x.PublishDate).IsRequired();
+        });
     }
 }
