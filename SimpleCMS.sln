@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29020.237
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34723.18
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleCMS.Domain", "src\SimpleCMS.Domain\SimpleCMS.Domain.csproj", "{554AD327-6DBA-4F8F-96F8-81CE7A0C863F}"
 EndProject
@@ -33,7 +33,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleCMS.HttpApi.Client.Co
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleCMS.DbMigrator", "src\SimpleCMS.DbMigrator\SimpleCMS.DbMigrator.csproj", "{AA94D832-1CCC-4715-95A9-A483F23A1A5D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleCMS.Blazor", "src\SimpleCMS.Blazor\SimpleCMS.Blazor.csproj", "{16F0BF4E-7D73-4278-8D9A-7CDE37105C6B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleCMS.Blazor", "src\SimpleCMS.Blazor\SimpleCMS.Blazor.csproj", "{16F0BF4E-7D73-4278-8D9A-7CDE37105C6B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
