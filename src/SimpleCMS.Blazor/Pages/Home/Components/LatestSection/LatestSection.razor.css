@@ -1,0 +1,26 @@
+﻿.article-date {
+    margin-left: 5px;
+}
+
+.latest-article {
+    border: 1px solid #E5E4E2;
+    display: inline-block;
+    margin: 0 10px 5px 0;
+    padding: 0;
+}
+
+.latest-details-container {
+    margin: 10px 10px;
+}
+
+.latest-img-container figure {
+    width: 100%;
+    margin: 0;
+}
+
+figure img.to-center {
+    display: block;
+    margin: 0 auto;
+    width: inherit;
+    object-fit: cover;
+}
