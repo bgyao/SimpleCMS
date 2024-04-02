@@ -4,6 +4,7 @@ using SimpleCMS.CmsContents;
 using SimpleCMS.CmsContents.Dtos;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace SimpleCMS.Blazor.Pages.Home.Components.LatestSection;
@@ -11,9 +12,10 @@ namespace SimpleCMS.Blazor.Pages.Home.Components.LatestSection;
 public partial class LatestSection
 {
     public GetAllCmsContentDetailsDto ContentDetails { get; set; }
+    public List<CmsContentDetailDto> Articles { get; set; }
 
     [Inject]
-    public IJSRuntime _js { get; set; }
+    private IJSRuntime _js { get; set; }
 
     [Inject]
     private ICmsContentAppService cmsContentAppService { get; set; }
@@ -28,6 +30,7 @@ public partial class LatestSection
         try
         {
             ContentDetails = await cmsContentAppService.GetAllCmsContentDetailsAsync();
+            Articles = ContentDetails.Items.Where(x => x.IsFeatured == false).ToList();
             StateHasChanged();
         }
         catch(Exception ex)

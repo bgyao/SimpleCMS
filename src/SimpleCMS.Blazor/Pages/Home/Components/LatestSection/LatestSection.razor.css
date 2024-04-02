@@ -22,4 +22,5 @@ figure img.to-center {
     display: block;
     margin: 0 auto;
     width: inherit;
+    object-fit: cover;
 }

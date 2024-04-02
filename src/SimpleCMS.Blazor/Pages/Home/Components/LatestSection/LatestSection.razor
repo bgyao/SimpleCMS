@@ -9,28 +9,27 @@
         }
         else
         {
-            @foreach (var article in ContentDetails.Items)
+            @foreach (var article in Articles)
             {
-                <article class="latest-article col-3">
-                    <div class="latest-details-container d-inline-block">
-                        <h4>@article.Title</h4>
-                        <h5>@article.Subtitle</h5>
-                        <p>by Ofw Gamer <span class="article-date">@article.PublishDate.Date.ToLongDateString()</span></p>
-                    </div>
-                    @if (!article.FeaturedImage.IsNullOrEmpty())
-                    {
-                        <div class="latest-img-container d-inline-block">
-                            <figure>
-                                <img class="to-center" src="@article.FeaturedImage" alt="placeholder image" />
-                            </figure>
+                <a href="#">
+                    <article class="latest-article col-3">
+                        <div class="latest-details-container d-inline-block">
+                            <h4>@article.Title</h4>
+                            <h5>@article.Subtitle</h5>
+                            <p>by Ofw Gamer <span class="article-date">@article.PublishDate.Date.ToLongDateString()</span></p>
                         </div>
-                    }
-                </article>
+                        @if (!article.FeaturedImage.IsNullOrEmpty())
+                        {
+                            <div class="latest-img-container d-inline-block">
+                                <figure>
+                                    <img class="to-center" src="@article.FeaturedImage" alt="placeholder image" />
+                                </figure>
+                            </div>
+                        }
+                    </article>
+                </a>
             }
         }
         
     </div>
-
-
-
 </section>
