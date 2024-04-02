@@ -62,4 +62,9 @@
     </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Pages\Articles\Add\" />
+    <Folder Include="Pages\Articles\Edit\" />
+  </ItemGroup>
+
 </Project>

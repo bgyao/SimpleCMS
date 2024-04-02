@@ -1,0 +1,24 @@
+﻿@page "/articles/{Id:guid}"
+
+<article>
+    @if (Article is not null)
+    {
+        <div id="article-content-details" class="text-center">
+            <h2>@Article.Title</h2>
+            <h4>@Article.Subtitle</h4>
+            <p>
+                by
+                <span data-role-type="author">Writer.FirstName WriterLastName</span> |
+                <span data-date-published="">@Article.PublishDate.ToLongDateString()</span>
+            </p>
+        </div>
+
+        <figure class="text-center">
+            <img id="article-content-image" src="@Article.FeaturedImage" alt="" />
+        </figure>
+
+        <div>
+            <p id="article-content-text">@Article.Content</p>
+        </div>
+    }
+</article>
