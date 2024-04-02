@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
 using Volo.Abp.Application.Dtos;
 
 namespace SimpleCMS.CmsContents.Dtos;
@@ -23,4 +21,6 @@ public class InsertOrUpdateCmsContentDto : AuditedEntityDto<Guid>
     [Required]
     [MaxLength(int.MaxValue)]
     public string Content { get; set; }
+
+    public bool IsFeatured { get; set; } = false;
 }

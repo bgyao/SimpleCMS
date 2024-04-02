@@ -98,6 +98,7 @@ public class SimpleCMSDbContext :
             b.Property(x => x.Subtitle).HasMaxLength(128);
             b.Property(x => x.Content).IsRequired().HasMaxLength(int.MaxValue);
             b.Property(x => x.PublishDate).IsRequired();
+            b.Property(x => x.IsFeatured).HasDefaultValue(false);
         });
     }
 }

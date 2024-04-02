@@ -385,3 +385,5 @@ src/SimpleCMS.Blazor.Tiered/Logs/*
 
 # Use abp install-libs to restore.
 **/wwwroot/libs/*
+src/SimpleCMS.Blazor/appsettings.json
+src/SimpleCMS.DbMigrator/appsettings.json

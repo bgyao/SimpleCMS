@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Volo.Abp;
 using Volo.Abp.Application.Dtos;
@@ -16,7 +15,8 @@ public class CmsContentAppService : CrudAppService<
     CmsContentDto,
     Guid,
     PagedAndSortedResultRequestDto,
-    InsertOrUpdateCmsContentDto>
+    InsertOrUpdateCmsContentDto>,
+    ICmsContentAppService
 {
     private readonly IRepository<CmsContent> _repository;
 
@@ -39,7 +39,8 @@ public class CmsContentAppService : CrudAppService<
                     Title = item.Title,
                     Subtitle = item.Subtitle,
                     PublishDate = item.PublishDate,
-                    FeaturedImage = item.FeaturedImage
+                    FeaturedImage = item.FeaturedImage,
+                    IsFeatured = item.IsFeatured
                 }).ToList();
 
             return new GetAllCmsContentDetailsDto(cmsContentDetailsList.Count, cmsContentDetailsList); ;
@@ -55,17 +56,17 @@ public class CmsContentAppService : CrudAppService<
         }
     }
 
-    public async Task InsertOrUpdateCmsContent(InsertOrUpdateCmsContentDto input)
+    public async Task InsertOrUpdateCmsContentAsync(InsertOrUpdateCmsContentDto input)
     {
         try
         {
             if (input.Id == Guid.Empty)
             {
-                await InsertNewCmsContent(input);
+                await InsertNewCmsContentAsync(input);
             }
             else
             {
-                await UpdateExistingCmsContent(input);
+                await UpdateExistingCmsContentAsync(input);
             }
         }
         catch (Exception ex)
@@ -77,15 +78,21 @@ public class CmsContentAppService : CrudAppService<
             Console.WriteLine("An error occurred while saving changes.");
         }
     }
-    private async Task InsertNewCmsContent(InsertOrUpdateCmsContentDto input)
+    private async Task InsertNewCmsContentAsync(InsertOrUpdateCmsContentDto input)
     {
+        if(input.IsFeatured)
+            _ = UnsetAllFeaturedCmsContentAsync();
+
         CmsContent newCmsContent = MapToCmsContent(input);
 
         await _repository.InsertAsync(newCmsContent, autoSave: true);
     }
 
-    private async Task UpdateExistingCmsContent(InsertOrUpdateCmsContentDto input)
+    private async Task UpdateExistingCmsContentAsync(InsertOrUpdateCmsContentDto input)
     {
+        if (input.IsFeatured)
+            _ = UnsetAllFeaturedCmsContentAsync();
+
         var query = await _repository.WithDetailsAsync();
 
         var updateCmsContent = query.Where(x => x.Id == input.Id)
@@ -104,7 +111,8 @@ public class CmsContentAppService : CrudAppService<
             Subtitle = input.Subtitle,
             Content = input.Content,
             PublishDate = input.PublishDate,
-            FeaturedImage = input.FeaturedImage
+            FeaturedImage = input.FeaturedImage,
+            IsFeatured = input.IsFeatured
         };
     }
 
@@ -115,6 +123,26 @@ public class CmsContentAppService : CrudAppService<
         cmsContent.Content = input.Content;
         cmsContent.PublishDate = input.PublishDate;
         cmsContent.FeaturedImage = input.FeaturedImage;
+        cmsContent.IsFeatured = input.IsFeatured;
+    }
+
+    private async Task UnsetAllFeaturedCmsContentAsync()
+    {
+        var query = await _repository.WithDetailsAsync();
+
+        var unsetFeatured = query
+            .Where(x => x.IsFeatured == true)
+            .ToList();
+
+        unsetFeatured = unsetFeatured
+            .Select(article => 
+            { 
+                article.IsFeatured = false; 
+                return article; 
+            })
+            .ToList();
+
+        await _repository.UpdateManyAsync(unsetFeatured);
     }
 
     private void ExceptionHandler(Exception ex)
