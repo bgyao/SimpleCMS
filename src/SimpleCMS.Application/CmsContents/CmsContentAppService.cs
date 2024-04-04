@@ -15,7 +15,7 @@ public class CmsContentAppService : CrudAppService<
     CmsContentDto,
     Guid,
     PagedAndSortedResultRequestDto,
-    InsertOrUpdateCmsContentDto>,
+    CreateUpdateCmsContentDto>,
     ICmsContentAppService
 {
     private readonly IRepository<CmsContent> _repository;
@@ -56,7 +56,7 @@ public class CmsContentAppService : CrudAppService<
         }
     }
 
-    public async Task InsertOrUpdateCmsContentAsync(InsertOrUpdateCmsContentDto input)
+    public async Task InsertOrUpdateCmsContentAsync(CreateUpdateCmsContentDto input)
     {
         try
         {
@@ -78,7 +78,7 @@ public class CmsContentAppService : CrudAppService<
             Console.WriteLine("An error occurred while saving changes.");
         }
     }
-    private async Task InsertNewCmsContentAsync(InsertOrUpdateCmsContentDto input)
+    private async Task InsertNewCmsContentAsync(CreateUpdateCmsContentDto input)
     {
         if(input.IsFeatured)
             _ = UnsetAllFeaturedCmsContentAsync();
@@ -88,7 +88,7 @@ public class CmsContentAppService : CrudAppService<
         await _repository.InsertAsync(newCmsContent, autoSave: true);
     }
 
-    private async Task UpdateExistingCmsContentAsync(InsertOrUpdateCmsContentDto input)
+    private async Task UpdateExistingCmsContentAsync(CreateUpdateCmsContentDto input)
     {
         if (input.IsFeatured)
             _ = UnsetAllFeaturedCmsContentAsync();
@@ -103,7 +103,7 @@ public class CmsContentAppService : CrudAppService<
         await _repository.UpdateAsync(updateCmsContent);
     }
 
-    private CmsContent MapToCmsContent(InsertOrUpdateCmsContentDto input)
+    private CmsContent MapToCmsContent(CreateUpdateCmsContentDto input)
     {
         return new CmsContent
         {
@@ -116,7 +116,7 @@ public class CmsContentAppService : CrudAppService<
         };
     }
 
-    private void MapInputToCmsContent(InsertOrUpdateCmsContentDto input, CmsContent cmsContent)
+    private void MapInputToCmsContent(CreateUpdateCmsContentDto input, CmsContent cmsContent)
     {
         cmsContent.Title = input.Title;
         cmsContent.Subtitle = input.Subtitle;

@@ -4,14 +4,14 @@ using Volo.Abp.Application.Dtos;
 
 namespace SimpleCMS.CmsContents.Dtos;
 
-public class InsertOrUpdateCmsContentDto : AuditedEntityDto<Guid>
+public class CreateUpdateCmsContentDto : AuditedEntityDto<Guid>
 {
     [Required]
-    [MaxLength(128)]
-    public string Title { get; set; }
+    [StringLength(128)]
+    public string Title { get; set; } = string.Empty;
 
-    [MaxLength(128)]
-    public string? Subtitle { get; set; }
+    [StringLength(128)]
+    public string? Subtitle { get; set; } = string.Empty;
 
     [Required]
     [DataType(DataType.Date)]
@@ -19,8 +19,8 @@ public class InsertOrUpdateCmsContentDto : AuditedEntityDto<Guid>
     public string? FeaturedImage { get; set; }
 
     [Required]
-    [MaxLength(int.MaxValue)]
-    public string Content { get; set; }
+    [StringLength(int.MaxValue)]
+    public string Content { get; set; } = string.Empty;
 
     public bool IsFeatured { get; set; } = false;
 }
