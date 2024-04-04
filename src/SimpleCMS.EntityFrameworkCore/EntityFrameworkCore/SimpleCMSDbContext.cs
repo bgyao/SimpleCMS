@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SimpleCMS.Books;
 using SimpleCMS.CmsContents;
 using Volo.Abp.AuditLogging.EntityFrameworkCore;
 using Volo.Abp.BackgroundJobs.EntityFrameworkCore;
@@ -26,6 +27,7 @@ public class SimpleCMSDbContext :
     ITenantManagementDbContext
 {
     /* Add DbSet properties for your Aggregate Roots / Entities here. */
+    public DbSet<Book> Books { get; set; }
     public DbSet<CmsContent> CmsContents { get; set; }
 
     #region Entities from the modules
@@ -85,10 +87,20 @@ public class SimpleCMSDbContext :
         //    b.ConfigureByConvention(); //auto configure for the base class props
         //    //...
         //});
+        ConfigureBooks(builder);
         ConfigureCmsContents(builder);
     }
 
-    protected void ConfigureCmsContents(ModelBuilder builder)
+    protected static void ConfigureBooks(ModelBuilder builder)
+    {
+        builder.Entity<Book>(b =>
+        {
+            b.ToTable(SimpleCMSConsts.DbTablePrefix + "Books", SimpleCMSConsts.DbSchema);
+            b.ConfigureByConvention();
+            b.Property(x => x.Name).IsRequired().HasMaxLength(128);
+        });
+    }
+    protected static void ConfigureCmsContents(ModelBuilder builder)
     {
         builder.Entity<CmsContent>( b =>
         {
