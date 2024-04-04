@@ -10,7 +10,7 @@ namespace SimpleCMS.Authors;
 public class AuthorAlreadyExistsException : BusinessException
 {
     public AuthorAlreadyExistsException(string name)
-        : base(BookStoreDomainErrorCodes.AuthorAlreadyExists)
+        : base(SimpleCMSDomainErrorCodes.AuthorAlreadyExists)
     {
         WithData("name", name);
     }

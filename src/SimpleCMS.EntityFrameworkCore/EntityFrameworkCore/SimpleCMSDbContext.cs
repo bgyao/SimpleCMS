@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SimpleCMS.Authors;
 using SimpleCMS.Books;
 using SimpleCMS.CmsContents;
 using Volo.Abp.AuditLogging.EntityFrameworkCore;
@@ -28,6 +29,7 @@ public class SimpleCMSDbContext :
 {
     /* Add DbSet properties for your Aggregate Roots / Entities here. */
     public DbSet<Book> Books { get; set; }
+    public DbSet<Author> Authors { get; set; }
     public DbSet<CmsContent> CmsContents { get; set; }
 
     #region Entities from the modules
@@ -88,6 +90,7 @@ public class SimpleCMSDbContext :
         //    //...
         //});
         ConfigureBooks(builder);
+        ConfigureAuthors(builder);
         ConfigureCmsContents(builder);
     }
 
@@ -98,6 +101,19 @@ public class SimpleCMSDbContext :
             b.ToTable(SimpleCMSConsts.DbTablePrefix + "Books", SimpleCMSConsts.DbSchema);
             b.ConfigureByConvention();
             b.Property(x => x.Name).IsRequired().HasMaxLength(128);
+        });
+    }
+
+    protected static void ConfigureAuthors(ModelBuilder builder)
+    {
+        builder.Entity<Author>( b =>
+        {
+            b.ToTable(SimpleCMSConsts.DbTablePrefix + "Authors", SimpleCMSConsts.DbSchema);
+            b.ConfigureByConvention();
+
+            b.Property(x => x.Name).IsRequired().HasMaxLength(AuthorConsts.MaxNameLength);
+
+            b.HasIndex(x => x.Name);
         });
     }
     protected static void ConfigureCmsContents(ModelBuilder builder)
