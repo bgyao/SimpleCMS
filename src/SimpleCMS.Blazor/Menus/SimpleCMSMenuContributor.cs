@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using SimpleCMS.Localization;
 using SimpleCMS.MultiTenancy;
 using Volo.Abp.Identity.Blazor;
@@ -33,6 +34,19 @@ public class SimpleCMSMenuContributor : IMenuContributor
                 order: 0
             )
         );
+
+        context.Menu.AddItem(
+            new ApplicationMenuItem(
+                "BookStore",
+                l["Menu:BookStore"],
+                icon: "fa fa-book"
+                ).AddItem(
+                new ApplicationMenuItem(
+                    "BookStore.Books",
+                    l["Menu:Books"],
+                    url: "/books")
+                )
+            );
 
         if (MultiTenancyConsts.IsEnabled)
         {

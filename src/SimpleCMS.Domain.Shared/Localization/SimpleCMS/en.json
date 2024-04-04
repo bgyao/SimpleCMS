@@ -1,8 +1,55 @@
 {
-  "culture": "en",
-  "texts": {
+  "Culture": "en",
+  "Texts": {
     "Menu:Home": "Home",
     "Welcome": "Welcome",
-    "LongWelcomeMessage": "Welcome to the application. This is a startup project based on the ABP framework. For more information, visit abp.io."
+    "LongWelcomeMessage": "Welcome to the application. This is a startup project based on the ABP framework. For more information, visit abp.io.",
+    "Menu:BookStore": "Book Store",
+    "Menu:Books": "Books",
+    "Actions": "Actions",
+    "Close": "Close",
+    "Delete": "Delete",
+    "Edit": "Edit",
+    "PublishDate": "Publish date",
+    "NewBook": "New book",
+    "Name": "Name",
+    "Type": "Type",
+    "Price": "Price",
+    "CreationTime": "Creation time",
+    "AreYouSure": "Are you sure?",
+    "AreYouSureToDelete": "Are you sure you want to delete this item?",
+    /*
+    NOTE: About Enum:BookType.0~8
+
+    Since Type is of enum BookType, the system automatically converts
+    the numerical value stored in the database (i.e., "0") to its
+    corresponding value (i.e., "Undefined"). This is causing problems
+    in displaying the localized value in this file.
+
+    Hence, there is a need to change the # in Enum:BookType.# into the
+    values indicated in the BookType class.
+
+    For reference, here are the localized fields and values in the ABP
+    Tutorial (these will not be used):
+    
+    "Enum:BookType.0": "Undefined",
+    "Enum:BookType.1": "Adventure",
+    "Enum:BookType.2": "Biography",
+    "Enum:BookType.3": "Dystopia",
+    "Enum:BookType.4": "Fantastic",
+    "Enum:BookType.5": "Horror",
+    "Enum:BookType.6": "Science",
+    "Enum:BookType.7": "Science fiction",
+    "Enum:BookType.8": "Poetry"
+    */
+    "Enum:BookType.Undefined": "Undefined",
+    "Enum:BookType.Adventure": "Adventure",
+    "Enum:BookType.Biography": "Biography",
+    "Enum:BookType.Dystopia": "Dystopia",
+    "Enum:BookType.Fantastic": "Fantastic",
+    "Enum:BookType.Horror": "Horror",
+    "Enum:BookType.Science": "Science",
+    "Enum:BookType.ScienceFiction": "Science fiction",
+    "Enum:BookType.Poetry": "Poetry"
   }
 }
