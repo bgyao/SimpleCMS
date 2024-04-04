@@ -16,4 +16,14 @@ public static class SimpleCMSPermissions
         public const string Delete = Default + ".Delete";
     }
     #endregion
+
+    #region Author Permissions
+    public static class Authors
+    {
+        public const string Default = GroupName + ".Authors";
+        public const string Create = Default + ".Create";
+        public const string Edit = Default + ".Edit";
+        public const string Delete = Default + ".Delete";
+    }
+    #endregion
 }
