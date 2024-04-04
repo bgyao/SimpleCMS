@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace SimpleCMS.Books;
 
-public class BookApplicationMapProfile : Profile
+public class BookAutoMapperProfile : Profile
 {
-    public BookApplicationMapProfile()
+    public BookAutoMapperProfile()
     {
         CreateMap<Book, BookDto>();
         CreateMap<CreateUpdateBookDto, Book>();

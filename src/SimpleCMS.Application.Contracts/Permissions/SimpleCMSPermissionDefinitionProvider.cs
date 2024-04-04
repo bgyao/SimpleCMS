@@ -18,6 +18,15 @@ public class SimpleCMSPermissionDefinitionProvider : PermissionDefinitionProvide
         booksPermission.AddChild(SimpleCMSPermissions.Books.Create, L("Permission:Books.Create"));
         booksPermission.AddChild(SimpleCMSPermissions.Books.Edit, L("Permission:Books.Edit"));
         booksPermission.AddChild(SimpleCMSPermissions.Books.Delete, L("Permission:Books.Delete"));
+
+        var authorsPermission = bookStoreGroup.AddPermission(
+            SimpleCMSPermissions.Authors.Default, L("Permission:Authors"));
+        authorsPermission.AddChild(
+            SimpleCMSPermissions.Authors.Create, L("Permission:Authors.Create"));
+        authorsPermission.AddChild(
+            SimpleCMSPermissions.Authors.Edit, L("Permission:Authors.Edit"));
+        authorsPermission.AddChild(
+            SimpleCMSPermissions.Authors.Delete, L("Permission:Authors.Delete"));
         #endregion
     }
 
