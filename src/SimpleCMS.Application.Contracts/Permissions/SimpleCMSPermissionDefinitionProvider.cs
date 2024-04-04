@@ -8,9 +8,17 @@ public class SimpleCMSPermissionDefinitionProvider : PermissionDefinitionProvide
 {
     public override void Define(IPermissionDefinitionContext context)
     {
-        var myGroup = context.AddGroup(SimpleCMSPermissions.GroupName);
-        //Define your own permissions here. Example:
-        //myGroup.AddPermission(SimpleCMSPermissions.MyPermission1, L("Permission:MyPermission1"));
+
+        #region BookStore Permissions
+        var bookStoreGroup = context.AddGroup(
+            SimpleCMSPermissions.GroupName, 
+            L("Permission:BookStore"));
+
+        var booksPermission = bookStoreGroup.AddPermission(SimpleCMSPermissions.Books.Default, L("Permission:Books"));
+        booksPermission.AddChild(SimpleCMSPermissions.Books.Create, L("Permission:Books.Create"));
+        booksPermission.AddChild(SimpleCMSPermissions.Books.Edit, L("Permission:Books.Edit"));
+        booksPermission.AddChild(SimpleCMSPermissions.Books.Delete, L("Permission:Books.Delete"));
+        #endregion
     }
 
     private static LocalizableString L(string name)

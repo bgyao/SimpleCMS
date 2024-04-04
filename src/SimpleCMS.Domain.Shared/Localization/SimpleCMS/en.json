@@ -26,12 +26,11 @@
     corresponding value (i.e., "Undefined"). This is causing problems
     in displaying the localized value in this file.
 
-    Hence, there is a need to change the # in Enum:BookType.# into the
-    values indicated in the BookType class.
-
-    For reference, here are the localized fields and values in the ABP
-    Tutorial (these will still be used for the Create and Edit Books modals):
+    Hence, there is a need to add the localizations definition for the
+    Books table -> Type column.
     */
+
+    /* Create/Edit Book: Type dropdown */
     "Enum:BookType.0": "Undefined",
     "Enum:BookType.1": "Adventure",
     "Enum:BookType.2": "Biography",
@@ -42,6 +41,7 @@
     "Enum:BookType.7": "Science fiction",
     "Enum:BookType.8": "Poetry",
 
+    /* Books Table: Type column */
     "Enum:BookType.Undefined": "Undefined",
     "Enum:BookType.Adventure": "Adventure",
     "Enum:BookType.Biography": "Biography",
@@ -50,6 +50,13 @@
     "Enum:BookType.Horror": "Horror",
     "Enum:BookType.Science": "Science",
     "Enum:BookType.ScienceFiction": "Science fiction",
-    "Enum:BookType.Poetry": "Poetry"
+    "Enum:BookType.Poetry": "Poetry",
+
+    /* BookStore Permissions */
+    "Permission:BookStore": "Book Store",
+    "Permission:Books": "Book Management",
+    "Permission:Books.Create": "Creating new books",
+    "Permission:Books.Edit": "Editing the books",
+    "Permission:Books.Delete": "Deleting the books"
   }
 }

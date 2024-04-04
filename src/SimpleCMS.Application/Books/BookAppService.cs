@@ -1,4 +1,5 @@
 ﻿using SimpleCMS.Books.Dtos;
+using SimpleCMS.Permissions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,6 +23,12 @@ public class BookAppService : CrudAppService<
     public BookAppService(IRepository<Book, Guid> repository)
         :base(repository)
     {
-
+        #region Authorization Policies
+        GetPolicyName = SimpleCMSPermissions.Books.Default;
+        GetListPolicyName = SimpleCMSPermissions.Books.Default;
+        CreatePolicyName = SimpleCMSPermissions.Books.Create;
+        UpdatePolicyName = SimpleCMSPermissions.Books.Edit;
+        DeletePolicyName = SimpleCMSPermissions.Books.Delete;
+        #endregion
     }
 }
