@@ -66,9 +66,11 @@
     "Authors": "Authors",
     "AuthorDeletionConfirmationMessage": "Are you sure to delete the author '{0}'?",
     "BirthDate": "Birth date",
+    "ShortBio" : "Short Bio",
     "NewAuthor": "New author",
 
     /* BookStore-related Errors */
-    "BookStore:00001": "There is already an author with the same name: {name}"
+    "BookStore:00001": "There is already an author with the same name: {name}",
+    "AnAuthorIsRequiredForCreatingBook": "An author is required to create a book"
   }
 }
