@@ -30,18 +30,37 @@ public class BookStoreDataSeederContributor
 
     public async Task SeedAsync(DataSeedContext context)
     {
-        #region Books Seeder
-        if (await _bookRepository.GetCountAsync() <= 0)
+        if (await _bookRepository.GetCountAsync() > 0)
         {
-            List<Book> books =
+            return;
+        }
+        var orwell = await _authorRepository.InsertAsync(
+            await _authorManager.CreateAsync(
+                "George Orwell",
+                new DateTime(1903, 06, 25),
+                "Orwell produced literary criticism and poetry, fiction and polemical journalism; and is best known for the allegorical novella Animal Farm (1945) and the dystopian novel Nineteen Eighty-Four (1949)."
+            )
+        );
+
+        var adams = await _authorRepository.InsertAsync(
+            await _authorManager.CreateAsync(
+                "Douglas Adams",
+                new DateTime(1952, 03, 11),
+                "Douglas Adams was an English author, screenwriter, essayist, humorist, satirist and dramatist. Adams was an advocate for environmentalism and conservation, a lover of fast cars, technological innovation and the Apple Macintosh, and a self-proclaimed 'radical atheist'."
+            )
+        );
+
+        List<Book> books =
             [
                     new() {
+                        AuthorId = orwell.Id,
                         Name = "1984",
                         Type = BookType.Dystopia,
                         PublishDate = new DateTime(1949, 6, 8),
                         Price = 19.84f
                     },
                     new() {
+                        AuthorId = adams.Id,
                         Name = "The Hitchhiker's Guide to the Galaxy",
                         Type = BookType.ScienceFiction,
                         PublishDate = new DateTime(1995, 9, 27),
@@ -49,29 +68,6 @@ public class BookStoreDataSeederContributor
                     }
             ];
 
-            await _bookRepository.InsertManyAsync(books, autoSave: true);
-        }
-        #endregion
-
-        #region Authors Seeder
-        if (await _authorRepository.GetCountAsync() <= 0)
-        {
-            await _authorRepository.InsertAsync(
-                await _authorManager.CreateAsync(
-                    "George Orwell",
-                    new DateTime(1903, 06, 25),
-                    "Orwell produced literary criticism and poetry, fiction and polemical journalism; and is best known for the allegorical novella Animal Farm (1945) and the dystopian novel Nineteen Eighty-Four (1949)."
-            )
-            );
-
-            await _authorRepository.InsertAsync(
-                await _authorManager.CreateAsync(
-                    "Douglas Adams",
-                    new DateTime(1952, 03, 11),
-                    "Douglas Adams was an English author, screenwriter, essayist, humorist, satirist and dramatist. Adams was an advocate for environmentalism and conservation, a lover of fast cars, technological innovation and the Apple Macintosh, and a self-proclaimed 'radical atheist'."
-                )
-            );
-        }
-        #endregion
+        await _bookRepository.InsertManyAsync(books, autoSave: true);
     }
 }

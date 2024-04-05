@@ -101,6 +101,8 @@ public class SimpleCMSDbContext :
             b.ToTable(SimpleCMSConsts.DbTablePrefix + "Books", SimpleCMSConsts.DbSchema);
             b.ConfigureByConvention();
             b.Property(x => x.Name).IsRequired().HasMaxLength(128);
+
+            b.HasOne<Author>().WithMany().HasForeignKey(x => x.AuthorId).IsRequired();
         });
     }
 
