@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using SimpleCMS.Localization;
 using SimpleCMS.MultiTenancy;
+using SimpleCMS.Permissions;
 using Volo.Abp.Identity.Blazor;
 using Volo.Abp.SettingManagement.Blazor.Menus;
 using Volo.Abp.TenantManagement.Blazor.Navigation;
@@ -19,7 +20,7 @@ public class SimpleCMSMenuContributor : IMenuContributor
         }
     }
 
-    private Task ConfigureMainMenuAsync(MenuConfigurationContext context)
+    private static async Task<Task> ConfigureMainMenuAsync(MenuConfigurationContext context)
     {
         var administration = context.Menu.GetAdministration();
         var l = context.GetLocalizer<SimpleCMSResource>();
@@ -47,6 +48,15 @@ public class SimpleCMSMenuContributor : IMenuContributor
                     url: "/books")
                 )
             );
+
+        if (await context.IsGrantedAsync(SimpleCMSPermissions.Authors.Default))
+        {
+            context.Menu.AddItem(new ApplicationMenuItem(
+                "BooksStore.Authors",
+                l["Menu:Authors"],
+                url: "/authors"
+            ));
+        }
 
         if (MultiTenancyConsts.IsEnabled)
         {
