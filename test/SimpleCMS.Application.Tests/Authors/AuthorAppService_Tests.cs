@@ -125,6 +125,16 @@ public abstract class AuthorAppService_Tests<TStartupModule> : SimpleCMSApplicat
     [Fact]
     public async Task Should_Delete_Existing_Author()
     {
+        // Note:
+        //      Step 1: Retrieve a valid author
+        //      Step 2: Get the Author.Id
+        //      Step 3: DeleteAsync(Author.Id)
+        //      Step 4: Use the same Author.Id in GetAsync()
+        //      RESULT: EntityNotFoundException
+        // Reason for step 4: DeleteAsync will always return 204 Undocumented regardless 
+        // if the Guid passed to it exists or not.
+
+        //Act
         var query = await _authorAppService.GetListAsync(
             new GetAuthorListDto { Filter = "Douglas" });
 
@@ -132,6 +142,7 @@ public abstract class AuthorAppService_Tests<TStartupModule> : SimpleCMSApplicat
 
         await _authorAppService.DeleteAsync(result.Id);
 
+        //Assert
         var ex = await Assert.ThrowsAsync<EntityNotFoundException>(async () =>
         {
             var checkDeletedThroughGetById = await _authorAppService.GetAsync(result.Id);
