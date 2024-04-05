@@ -8,6 +8,6 @@ public class CmsContentApplicationMapProfile : Profile
     public CmsContentApplicationMapProfile()
     {
         CreateMap<CmsContent, CmsContentDto>();
-        CreateMap<InsertOrUpdateCmsContentDto, CmsContentDto>();
+        CreateMap<CreateUpdateCmsContentDto, CmsContentDto>();
     }
 }

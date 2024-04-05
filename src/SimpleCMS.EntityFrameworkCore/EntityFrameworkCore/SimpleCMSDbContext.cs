@@ -1,4 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SimpleCMS.Authors;
+using SimpleCMS.Books;
 using SimpleCMS.CmsContents;
 using Volo.Abp.AuditLogging.EntityFrameworkCore;
 using Volo.Abp.BackgroundJobs.EntityFrameworkCore;
@@ -26,6 +28,8 @@ public class SimpleCMSDbContext :
     ITenantManagementDbContext
 {
     /* Add DbSet properties for your Aggregate Roots / Entities here. */
+    public DbSet<Book> Books { get; set; }
+    public DbSet<Author> Authors { get; set; }
     public DbSet<CmsContent> CmsContents { get; set; }
 
     #region Entities from the modules
@@ -85,10 +89,36 @@ public class SimpleCMSDbContext :
         //    b.ConfigureByConvention(); //auto configure for the base class props
         //    //...
         //});
+        ConfigureBooks(builder);
+        ConfigureAuthors(builder);
         ConfigureCmsContents(builder);
     }
 
-    protected void ConfigureCmsContents(ModelBuilder builder)
+    protected static void ConfigureBooks(ModelBuilder builder)
+    {
+        builder.Entity<Book>(b =>
+        {
+            b.ToTable(SimpleCMSConsts.DbTablePrefix + "Books", SimpleCMSConsts.DbSchema);
+            b.ConfigureByConvention();
+            b.Property(x => x.Name).IsRequired().HasMaxLength(128);
+
+            b.HasOne<Author>().WithMany().HasForeignKey(x => x.AuthorId).IsRequired();
+        });
+    }
+
+    protected static void ConfigureAuthors(ModelBuilder builder)
+    {
+        builder.Entity<Author>( b =>
+        {
+            b.ToTable(SimpleCMSConsts.DbTablePrefix + "Authors", SimpleCMSConsts.DbSchema);
+            b.ConfigureByConvention();
+
+            b.Property(x => x.Name).IsRequired().HasMaxLength(AuthorConsts.MaxNameLength);
+
+            b.HasIndex(x => x.Name);
+        });
+    }
+    protected static void ConfigureCmsContents(ModelBuilder builder)
     {
         builder.Entity<CmsContent>( b =>
         {

@@ -10,8 +10,8 @@ public interface ICmsContentAppService : ICrudAppService<
     CmsContentDto,
     Guid,
     PagedAndSortedResultRequestDto,
-    InsertOrUpdateCmsContentDto> //should be separate by SOLID Principles
+    CreateUpdateCmsContentDto> //should be separate by SOLID Principles
 {
     Task<GetAllCmsContentDetailsDto> GetAllCmsContentDetailsAsync();
-    Task InsertOrUpdateCmsContentAsync(InsertOrUpdateCmsContentDto input);
+    Task InsertOrUpdateCmsContentAsync(CreateUpdateCmsContentDto input);
 }
