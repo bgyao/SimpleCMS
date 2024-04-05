@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using SimpleCMS.Authors;
 using SimpleCMS.Books.Dtos;
 using System;
 using System.Collections.Generic;
@@ -14,5 +15,6 @@ public class BookAutoMapperProfile : Profile
     {
         CreateMap<Book, BookDto>();
         CreateMap<CreateUpdateBookDto, Book>();
+        CreateMap<Author, AuthorLookupDto>();
     }
 }

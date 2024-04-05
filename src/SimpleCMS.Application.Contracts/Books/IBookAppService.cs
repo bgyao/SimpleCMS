@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 
@@ -14,4 +15,5 @@ public interface IBookAppService :
         PagedAndSortedResultRequestDto,
         CreateUpdateBookDto> //must be separate in line with SOLID Principles
 {
+    Task<ListResultDto<AuthorLookupDto>> GetAuthorLookupAsync();
 }
