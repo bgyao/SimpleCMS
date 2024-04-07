@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\SimpleCMS.Application.Contracts\SimpleCMS.Application.Contracts.csproj" />
     <ProjectReference Include="..\SimpleCMS.Domain.Shared\SimpleCMS.Domain.Shared.csproj" />
   </ItemGroup>
 

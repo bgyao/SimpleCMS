@@ -1,6 +1,7 @@
 ﻿using SimpleCMS.Authors;
 using SimpleCMS.Books.Dtos;
 using SimpleCMS.Permissions;
+using SimpleCMS.Shared.Dtos;
 using System;
 using System.Collections.Generic;
 using System.Linq;

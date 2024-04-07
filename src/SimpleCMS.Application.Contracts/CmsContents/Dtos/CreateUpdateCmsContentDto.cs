@@ -6,6 +6,8 @@ namespace SimpleCMS.CmsContents.Dtos;
 
 public class CreateUpdateCmsContentDto : AuditedEntityDto<Guid>
 {
+    public Guid AuthorId { get; set; }
+
     [Required]
     [StringLength(128)]
     public string Title { get; set; } = string.Empty;

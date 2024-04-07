@@ -9,7 +9,7 @@ using Volo.Abp.Data;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.Domain.Repositories;
 
-namespace SimpleCMS;
+namespace SimpleCMS.DataSeederContributors;
 
 public class BookStoreDataSeederContributor
     : IDataSeedContributor, ITransientDependency
