@@ -1,4 +1,6 @@
 ﻿using SimpleCMS.CmsContents.Dtos;
+using SimpleCMS.Shared;
+using SimpleCMS.Shared.Dtos;
 using System;
 using System.Threading.Tasks;
 using Volo.Abp.Application.Dtos;
@@ -10,8 +12,9 @@ public interface ICmsContentAppService : ICrudAppService<
     CmsContentDto,
     Guid,
     PagedAndSortedResultRequestDto,
-    CreateUpdateCmsContentDto> //should be separate by SOLID Principles
+    CreateUpdateCmsContentDto>, //should be separate by SOLID Principles
+    IAuthorLookupAppService
 {
-    Task<GetAllCmsContentDetailsDto> GetAllCmsContentDetailsAsync();
+    Task<GetAllCmsContentDetailsDto> GetAllCmsContentDetailsAsync(PagedAndSortedResultRequestDto input);
     Task InsertOrUpdateCmsContentAsync(CreateUpdateCmsContentDto input);
 }

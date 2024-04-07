@@ -3,9 +3,9 @@ using SimpleCMS.CmsContents.Dtos;
 
 namespace SimpleCMS.CmsContents;
 
-public class CmsContentApplicationMapProfile : Profile
+public class CmsContentAutoMapperProfile : Profile
 {
-    public CmsContentApplicationMapProfile()
+    public CmsContentAutoMapperProfile()
     {
         CreateMap<CmsContent, CmsContentDto>();
         CreateMap<CreateUpdateCmsContentDto, CmsContentDto>();

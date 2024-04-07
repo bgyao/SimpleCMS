@@ -129,6 +129,8 @@ public class SimpleCMSDbContext :
             b.Property(x => x.Content).IsRequired().HasMaxLength(int.MaxValue);
             b.Property(x => x.PublishDate).IsRequired();
             b.Property(x => x.IsFeatured).HasDefaultValue(false);
+
+            b.HasOne<Author>().WithMany().HasForeignKey(x => x.AuthorId).IsRequired();
         });
     }
 }

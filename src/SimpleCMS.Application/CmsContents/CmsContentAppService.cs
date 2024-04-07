@@ -1,7 +1,13 @@
-﻿using SimpleCMS.CmsContents.Dtos;
+﻿using Microsoft.IdentityModel.Tokens;
+using SimpleCMS.Authors;
+using SimpleCMS.Books;
+using SimpleCMS.CmsContents.Dtos;
+using SimpleCMS.Permissions;
+using SimpleCMS.Shared.Dtos;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using Volo.Abp;
 using Volo.Abp.Application.Dtos;
@@ -19,33 +25,85 @@ public class CmsContentAppService : CrudAppService<
     ICmsContentAppService
 {
     private readonly IRepository<CmsContent> _repository;
+    private readonly IAuthorRepository _authorRepository;
 
-    public CmsContentAppService (IRepository<CmsContent, Guid> repository)
+    public CmsContentAppService (
+        IRepository<CmsContent, Guid> repository,
+        IAuthorRepository authorRepository
+        )
         : base(repository)
     {
         _repository = repository;
+        _authorRepository = authorRepository;
+
+        #region Administrative Policies
+        GetPolicyName = SimpleCMSPermissions.CmsContentsAdminPolicies.Default;
+        GetListPolicyName = SimpleCMSPermissions.CmsContentsAdminPolicies.Default;
+        CreatePolicyName = SimpleCMSPermissions.CmsContentsAdminPolicies.Create;
+        UpdatePolicyName = SimpleCMSPermissions.CmsContentsAdminPolicies.Edit;
+        DeletePolicyName = SimpleCMSPermissions.CmsContentsAdminPolicies.Delete;
+        #endregion
     }
 
-    public async Task<GetAllCmsContentDetailsDto> GetAllCmsContentDetailsAsync()
+    public override async Task <CmsContentDto> GetAsync(Guid id)
     {
         try
         {
-            var query = await _repository.GetQueryableAsync();
+            var article = await _repository.GetAsync(article => article.Id == id);
+            var articleAuthor = await _authorRepository.GetAsync(author => author.Id == article.AuthorId);
 
-            var cmsContentDetailsList = query.Select(item => 
-                new CmsContentDetailDto
-                {
-                    Id = item.Id,
-                    Title = item.Title,
-                    Subtitle = item.Subtitle,
-                    PublishDate = item.PublishDate,
-                    FeaturedImage = item.FeaturedImage,
-                    IsFeatured = item.IsFeatured
-                }).ToList();
+            if(article is null || articleAuthor is null)
+            {
+                return new CmsContentDto();
+            }
 
-            return new GetAllCmsContentDetailsDto(cmsContentDetailsList.Count, cmsContentDetailsList); ;
+            return ArticleAuthorMerger(article, articleAuthor);
         }
-        catch(Exception ex)
+        catch (Exception ex)
+        {
+            ExceptionHandler(ex);
+            return new CmsContentDto();
+        }
+        finally
+        {
+            Console.WriteLine("An error occurred while retrieving the article.");
+        }
+    }
+    public async Task<GetAllCmsContentDetailsDto> GetAllCmsContentDetailsAsync(PagedAndSortedResultRequestDto input)
+    {
+        try
+        {
+            var cmsContentList = await _repository.GetQueryableAsync();
+
+            if (cmsContentList.IsNullOrEmpty())
+                return new GetAllCmsContentDetailsDto(0, new List<CmsContentDetailDto>());
+
+            var joinQuery = from cmsContent in cmsContentList
+                            join author in await _authorRepository.GetQueryableAsync() on cmsContent.AuthorId equals author.Id
+                            select new { CmsContent = cmsContent, Author = author };
+
+            var query = joinQuery
+                .OrderBy(NormalizeSorting(input.Sorting))
+                .Skip(input.SkipCount)
+                .Take(input.MaxResultCount);
+
+            var result = await AsyncExecuter.ToListAsync(query);
+
+            var cmsContentDetailsList = result.Select(x => new CmsContentDetailDto
+            {
+                Id = x.CmsContent.Id,
+                AuthorId = x.Author.Id,
+                AuthorName = x.Author.Name,
+                Title = x.CmsContent.Title,
+                Subtitle = x.CmsContent.Subtitle,
+                PublishDate = x.CmsContent.PublishDate,
+                IsFeatured = x.CmsContent.IsFeatured,
+                FeaturedImage = x.CmsContent.FeaturedImage
+            }).ToList();
+
+            return new GetAllCmsContentDetailsDto(cmsContentDetailsList.Count, cmsContentDetailsList);
+        }
+        catch (Exception ex)
         {
             ExceptionHandler(ex);
             return new GetAllCmsContentDetailsDto(0, new List<CmsContentDetailDto>());
@@ -77,6 +135,15 @@ public class CmsContentAppService : CrudAppService<
         {
             Console.WriteLine("An error occurred while saving changes.");
         }
+    }
+
+    public async Task<ListResultDto<AuthorLookupDto>> GetAuthorLookupAsync()
+    {
+        var authors = await _authorRepository.GetListAsync();
+
+        return new ListResultDto<AuthorLookupDto>(
+            ObjectMapper.Map<List<Author>, List<AuthorLookupDto>>(authors)
+        );
     }
     private async Task InsertNewCmsContentAsync(CreateUpdateCmsContentDto input)
     {
@@ -151,5 +218,39 @@ public class CmsContentAppService : CrudAppService<
             $"\nInnerException:{ex.InnerException.Message}" : string.Empty;
 
         throw new UserFriendlyException($"{innerException}");
+    }
+
+    private CmsContentDto ArticleAuthorMerger(CmsContent cmsContentQuery, Author authorContentQuery)
+    {
+        return new CmsContentDto()
+        {
+            Id = cmsContentQuery.Id,
+            Title = cmsContentQuery.Title,
+            Subtitle = cmsContentQuery.Subtitle,
+            AuthorId = authorContentQuery.Id,
+            AuthorName = authorContentQuery.Name,
+            PublishDate = cmsContentQuery.PublishDate,
+            FeaturedImage = cmsContentQuery.FeaturedImage,
+            IsFeatured = cmsContentQuery.IsFeatured,
+            Content = cmsContentQuery.Content
+        };
+    }
+    private static string NormalizeSorting(string sorting)
+    {
+        if (sorting.IsNullOrEmpty())
+        {
+            return $"cmsContent.{nameof(CmsContent.Title)}";
+        }
+
+        if (sorting.Contains("authorName", StringComparison.OrdinalIgnoreCase))
+        {
+            return sorting.Replace(
+                "authorName",
+                "author.Name",
+                StringComparison.OrdinalIgnoreCase
+            );
+        }
+
+        return $"cmsContent.{sorting}";
     }
 }
