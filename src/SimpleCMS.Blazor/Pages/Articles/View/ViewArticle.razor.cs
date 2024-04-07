@@ -4,6 +4,7 @@ using SimpleCMS.CmsContents;
 using SimpleCMS.CmsContents.Dtos;
 using System;
 using System.Threading.Tasks;
+using Volo.Abp.Users;
 
 namespace SimpleCMS.Blazor.Pages.Articles.View;
 
@@ -20,6 +21,11 @@ public partial class ViewArticle
     [Inject]
     private ICmsContentAppService cmsContentAppService { get; set; }
 
+    [Inject]
+    public ICurrentUser CurrentUser { get; set; }
+
+    public bool IsLoading = true;
+
     public ViewArticle()
     {
 
@@ -30,26 +36,14 @@ public partial class ViewArticle
         try
         {
             Article = await cmsContentAppService.GetAsync(Id);
+            IsLoading = false;
             StateHasChanged();
         }
         catch (Exception ex)
         {
-            await _js.InvokeVoidAsync("defaultMessage", "error", "Failed to load", ex.Message);
+            //await _js.InvokeVoidAsync("defaultMessage", "error", "Failed to load", ex.Message);
+            Console.WriteLine(ex.Message);
         }
     }
 
-    //protected override async Task OnAfterRenderAsync(bool firstRender)
-    //{
-    //    try
-    //    {
-    //        if (firstRender)
-    //        {
-    //            Article = await cmsContentAppService.GetCmsContentAsync(Id);
-    //        }
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        await _js.InvokeVoidAsync("defaultMessage", "error", "Failed to load", ex.Message);
-    //    }
-    //}
 }

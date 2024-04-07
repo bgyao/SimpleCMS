@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Volo.Abp.Application.Dtos;
 
 namespace SimpleCMS.Blazor.Pages.Home.Components.FeaturedSection;
 
@@ -19,6 +20,8 @@ public partial class FeaturedSection
     [Inject]
     private ICmsContentAppService cmsContentAppService { get; set; }
 
+    public bool IsLoading = true;
+
     public FeaturedSection()
     {
     }
@@ -27,8 +30,14 @@ public partial class FeaturedSection
     {
         try
         {
-            ContentDetails = await cmsContentAppService.GetAllCmsContentDetailsAsync();
+            ContentDetails = await cmsContentAppService.GetAllCmsContentDetailsAsync(
+            new PagedAndSortedResultRequestDto()
+            {
+                MaxResultCount = 999,
+                SkipCount = 0
+            });
             FeaturedArticles = ContentDetails.Items.Where(x => x.IsFeatured == true).ToList();
+            IsLoading = false;
             StateHasChanged();
         }
         catch (Exception ex)

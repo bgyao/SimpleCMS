@@ -11,7 +11,7 @@ public class SimpleCMSPermissionDefinitionProvider : PermissionDefinitionProvide
 
         #region BookStore Permissions
         var bookStoreGroup = context.AddGroup(
-            SimpleCMSPermissions.GroupName, 
+            SimpleCMSPermissions.BookStoreGroup, 
             L("Permission:BookStore"));
 
         var booksPermission = bookStoreGroup.AddPermission(SimpleCMSPermissions.Books.Default, L("Permission:Books"));
@@ -19,7 +19,10 @@ public class SimpleCMSPermissionDefinitionProvider : PermissionDefinitionProvide
         booksPermission.AddChild(SimpleCMSPermissions.Books.Edit, L("Permission:Books.Edit"));
         booksPermission.AddChild(SimpleCMSPermissions.Books.Delete, L("Permission:Books.Delete"));
 
-        var authorsPermission = bookStoreGroup.AddPermission(
+        var authorsGroup = context.AddGroup(
+            SimpleCMSPermissions.AuthorsGroup,
+            L("Permission:Authors"));
+        var authorsPermission = authorsGroup.AddPermission(
             SimpleCMSPermissions.Authors.Default, L("Permission:Authors"));
         authorsPermission.AddChild(
             SimpleCMSPermissions.Authors.Create, L("Permission:Authors.Create"));
@@ -27,6 +30,18 @@ public class SimpleCMSPermissionDefinitionProvider : PermissionDefinitionProvide
             SimpleCMSPermissions.Authors.Edit, L("Permission:Authors.Edit"));
         authorsPermission.AddChild(
             SimpleCMSPermissions.Authors.Delete, L("Permission:Authors.Delete"));
+        #endregion
+
+        #region CMS Permissions
+        var cmsPermissionsGroup = context.AddGroup(
+            SimpleCMSPermissions.GroupName,
+            L("Permission:CMSContents"));
+
+        var cmsPermission = cmsPermissionsGroup.AddPermission(
+            SimpleCMSPermissions.CmsContentsAdminPolicies.Default, L("Permission:CMSContentManagement"));
+        cmsPermission.AddChild(SimpleCMSPermissions.CmsContentsAdminPolicies.Create, L("Permission:CMSContents.Create"));
+        cmsPermission.AddChild(SimpleCMSPermissions.CmsContentsAdminPolicies.Edit, L("Permission:CMSContents.Edit"));
+        cmsPermission.AddChild(SimpleCMSPermissions.CmsContentsAdminPolicies.Delete, L("Permission:CMSContents.Delete"));
         #endregion
     }
 
