@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Volo.Abp.Application.Dtos;
 
 namespace SimpleCMS.Blazor.Pages.Home.Components.LatestSection;
 
@@ -19,7 +20,7 @@ public partial class LatestSection
 
     [Inject]
     private ICmsContentAppService cmsContentAppService { get; set; }
-
+    public bool IsLoading = true;
     public LatestSection()
     {
 
@@ -29,8 +30,10 @@ public partial class LatestSection
     {
         try
         {
-            ContentDetails = await cmsContentAppService.GetAllCmsContentDetailsAsync();
+            ContentDetails = await cmsContentAppService.GetAllCmsContentDetailsAsync( 
+                new PagedAndSortedResultRequestDto() );
             Articles = ContentDetails.Items.Where(x => x.IsFeatured == false).ToList();
+            IsLoading = false;
             StateHasChanged();
         }
         catch(Exception ex)

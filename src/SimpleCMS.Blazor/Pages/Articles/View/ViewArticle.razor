@@ -1,6 +1,14 @@
 ﻿@page "/articles/{Id:guid}"
 
 <article>
+    @*if (IsLoading)
+    {
+        
+    }
+    else if (Article is null)
+    {
+        <p>The article you are trying to access is not found.</p>
+    }*@
     @if (Article is not null)
     {
         <div id="article-content-details" class="text-center">
@@ -8,7 +16,7 @@
             <h4>@Article.Subtitle</h4>
             <p>
                 by
-                <span data-role-type="author">Writer.FirstName WriterLastName</span> |
+                <span data-role-type="author">@Article.AuthorName</span> |
                 <span data-date-published="">@Article.PublishDate.ToLongDateString()</span>
             </p>
         </div>
@@ -21,4 +29,13 @@
             <p id="article-content-text">@Article.Content</p>
         </div>
     }
+    else
+    {
+        <p>The article you are trying to access is not found.</p>
+    }
 </article>
+
+@if (CurrentUser.IsAuthenticated)
+{
+    <p><a href="/edit/@Id">Edit</a> | Delete</p>
+}

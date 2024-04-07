@@ -66,8 +66,18 @@
     "Authors": "Authors",
     "AuthorDeletionConfirmationMessage": "Are you sure to delete the author '{0}'?",
     "BirthDate": "Birth date",
-    "ShortBio" : "Short Bio",
+    "ShortBio": "Short Bio",
     "NewAuthor": "New author",
+
+    /* CMS Contents Permissions */
+    "Permission:CMSContents": "CMS Contents",
+    "Permission:CMSContentManagement": "CMS Contents Management",
+    "Permission:CMSContents.Create": "Creating new articles",
+    "Permission:CMSContents.Edit": "Editing articles",
+    "Permission:CMSContents.Delete": "Deleting articles",
+    "Menu:CMSContents": "CMS Contents",
+    "CMSContents": "CMS Contents",
+    "CMSContentDeletionConfirmationMessage": "Are you sure you want to delete this article? This cannot be undone.",
 
     /* BookStore-related Errors */
     "BookStore:00001": "There is already an author with the same name: {name}",
