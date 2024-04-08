@@ -392,7 +392,7 @@ public abstract class CmsContentAppService_Tests<TStartupModule> :
         //Assert
         var ex = await Assert.ThrowsAsync<UserFriendlyException>(async () =>
         {
-            var checkIfBookIsDeleted = await _contentAppService.GetCmsContentAsync(query.Items[0].Id);
+            var checkIfDeleted = await _contentAppService.GetCmsContentAsync(query.Items[0].Id);
         });
 
         ex.ShouldNotBeNull();
