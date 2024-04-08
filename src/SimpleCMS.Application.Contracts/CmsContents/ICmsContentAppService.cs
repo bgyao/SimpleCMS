@@ -17,5 +17,6 @@ public interface ICmsContentAppService : ICrudAppService<
 {
     Task<GetAllCmsContentDetailsDto> GetAllCmsContentDetailsAsync(PagedAndSortedResultRequestDto input);
     Task InsertOrUpdateCmsContentAsync(CreateUpdateCmsContentDto input);
+    Task<ListResultDto<AuthorLookupDto>> GetAuthorLookupAsync();
     CreateUpdateCmsContentDto MapInputForUpdating(CmsContentDto input);
 }
