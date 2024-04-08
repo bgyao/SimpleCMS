@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using Blazorise;
+using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Localization;
 using Microsoft.JSInterop;
 using SimpleCMS.CmsContents;
@@ -18,7 +19,7 @@ public partial class ViewArticle
     public Guid Id { get; set; }
 
     [Inject]
-    private IJSRuntime _js { get; set; }
+    private IMessageService MessageService { get; set; }
 
     [Inject]
     private ICmsContentAppService cmsContentAppService { get; set; }
@@ -46,7 +47,7 @@ public partial class ViewArticle
         }
         catch (Exception ex)
         {
-            //await _js.InvokeVoidAsync("defaultMessage", "error", "Failed to load", ex.Message);
+            await MessageService.Error($"Inner Exception error occurred: {ex.Message}", "Error");
             Console.WriteLine(ex.Message);
         }
     }

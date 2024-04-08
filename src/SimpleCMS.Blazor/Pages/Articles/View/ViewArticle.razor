@@ -25,16 +25,17 @@
             <img id="article-content-image" src="@Article.FeaturedImage" alt="" />
         </figure>
 
-        <div>
-            <p id="article-content-text">@Article.Content</p>
+        <div id ="article-content-text">
+            @((MarkupString)Article.Content)
         </div>
     }
 </article>
 
+
+
 @if (CurrentUser.IsAuthenticated)
 {
     <p>
-        <a href="/edit/@Id">Edit</a> | 
-        Delete
+        <a href="/edit/@Id">Edit</a>
     </p>
 }
