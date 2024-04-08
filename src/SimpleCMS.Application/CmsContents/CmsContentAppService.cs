@@ -145,8 +145,7 @@ public class CmsContentAppService : CrudAppService<
             _ = UnsetAllFeaturedCmsContentAsync();
 
         CmsContent newCmsContent = MapToCmsContent(input);
-
-        await _repository.InsertAsync(newCmsContent, autoSave: true);
+        await _repository.InsertAsync(newCmsContent, false);
     }
 
     private async Task UpdateExistingCmsContentAsync(CreateUpdateCmsContentDto input)

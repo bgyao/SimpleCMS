@@ -5,6 +5,15 @@
 @inherits SimpleCMSComponentBase
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
+@if (CurrentUser.IsAuthenticated)
+{
+    <Div Margin="Margin.Is1" TextAlignment="TextAlignment.End">
+        <Button Color="Color.Primary" Clicked="AddArticle">
+            Create new article
+        </Button>
+    </Div>
+    
+}
 <FeaturedSection />
 
 <LatestSection />

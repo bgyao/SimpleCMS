@@ -1,50 +1,42 @@
-﻿@page "/edit/{Id:guid}"
+﻿@page "/add"
 @using Blazorise.RichTextEdit
-@using SimpleCMS.CmsContents
-@using SimpleCMS.CmsContents.Dtos
-@using Volo.Abp.Application.Dtos
-@using Volo.Abp.AspNetCore.Components.Web.LeptonXLiteTheme.Themes.LeptonXLite
 @attribute [Authorize()]
 
-@if(IsLoading)
+@if (IsLoading)
 {
-    <p>Loading article...</p>
-}
-else if(Article is null)
-{
-    <p>@L["ArticleNotFound"]</p>
+    <p>Loading...</p>
 }
 else
 {
     <Form>
-        <Validations Model="Article" ValidateOnLoad="false">
+        <Validations Model="NewArticle" ValidateOnLoad="false">
             <Validation MessageLocalizer="@LH.Localize">
                 @* TITLE FIELD *@
                 <Field>
                     <FieldLabel>@L["CMSContent:Title"]</FieldLabel>
-                    <TextEdit @bind-Text="@Article.Title">
+                    <TextEdit @bind-Text="@NewArticle.Title">
                         <Feedback>
-                            <ValidationMessage For="@(() => Article.Title)" />
+                            <ValidationError><ValidationMessage For="@(() => NewArticle.Title)" /></ValidationError>
                         </Feedback>
                     </TextEdit>
-                    
+
                 </Field>
 
                 @* SUBTITLE FIELD *@
                 <Field>
                     <FieldLabel>@L["CMSContent:Subtitle"]</FieldLabel>
-                    <TextEdit @bind-Text="@Article.Subtitle">
+                    <TextEdit @bind-Text="@NewArticle.Subtitle">
                         <Feedback>
-                            <ValidationMessage For="@(() => Article.Subtitle)" />
+                            <ValidationError><ValidationMessage For="@(() => NewArticle.Subtitle)" /></ValidationError>
                         </Feedback>
                     </TextEdit>
-            
+
                 </Field>
 
                 @* AUTHOR FIELD *@
                 <Field>
                     <FieldLabel>@L["Author"]</FieldLabel>
-                    <Select TValue="Guid" @bind-SelectedValue="@Article.AuthorId">
+                    <Select TValue="Guid" @bind-SelectedValue="@NewArticle.AuthorId">
                         @foreach (var author in authorList)
                         {
                             <SelectItem TValue="Guid" Value="@author.Id">
@@ -57,8 +49,8 @@ else
                 @* PUBLISHDATE FIELD *@
                 <Field>
                     <FieldLabel>@L["CMSContent:DatePublished"]</FieldLabel>
-                    <DateEdit TValue="DateTime" @bind-Date="Article.PublishDate" />
-                    <ValidationMessage For="@(() => Article.PublishDate)" />
+                    <DateEdit TValue="DateTime" @bind-Date="NewArticle.PublishDate" />
+                    <ValidationError><ValidationMessage For="@(() => NewArticle.PublishDate)" /></ValidationError>
                 </Field>
 
                 @* CONTENT FIELD*@
@@ -72,7 +64,7 @@ else
                                   SubmitOnEnter="false"
                                   ToolbarPosition="Placement.Bottom">
                         <Editor>
-                            @((MarkupString)Article.Content)
+                            @((MarkupString)NewArticle.Content)
                         </Editor>
                         <Toolbar>
                             <RichTextEditToolbarGroup>
@@ -81,7 +73,7 @@ else
                                     <RichTextEditToolbarSelectItem Value="1" />
                                     <RichTextEditToolbarSelectItem Value="2" />
                                     <RichTextEditToolbarSelectItem Value="3" />
-                                    <RichTextEditToolbarSelectItem Selected >Text</RichTextEditToolbarSelectItem>
+                                    <RichTextEditToolbarSelectItem Selected>Text</RichTextEditToolbarSelectItem>
                                 </RichTextEditToolbarSelect>
                                 @* Font Size Options *@
                                 <RichTextEditToolbarSelect Action="RichTextEditAction.Size">
@@ -118,31 +110,26 @@ else
                             </RichTextEditToolbarGroup>
                         </Toolbar>
                     </RichTextEdit>
-                    <ValidationMessage For="@(() => Article.Content)" />
+                    <ValidationError><ValidationMessage For="@(() => NewArticle.Content)" /></ValidationError>
                 </Field>
             </Validation>
         </Validations>
 
         @* ISFEATURED FIELD*@
         <Field>
-            <Check TValue="bool" @bind-checked="@Article.IsFeatured">@L["CMSContent:IsFeatured"]</Check>
+            <Check TValue="bool" @bind-checked="@NewArticle.IsFeatured">@L["CMSContent:IsFeatured"]</Check>
         </Field>
-            
+
         <Button Color="Color.Secondary"
                 Clicked="ConfirmCancel">
             @L["Cancel"]
         </Button>
-        <Button Color="Color.Danger"
-            Clicked="DeleteArticle">
-            @L["Delete"]
-        </Button>
+
         <Button Color="Color.Primary"
                 Type="@ButtonType.Submit"
                 PreventDefaultOnSubmit="true"
-                Clicked="UpdateArticleAsync">
+                Clicked="CreateArticleAsync">
             @L["Save"]
         </Button>
     </Form>
 }
-
-<MessageProvider />

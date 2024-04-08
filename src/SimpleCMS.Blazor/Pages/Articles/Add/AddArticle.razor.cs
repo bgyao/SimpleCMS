@@ -11,17 +11,16 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Volo.Abp.AspNetCore.Components.Web;
 
-namespace SimpleCMS.Blazor.Pages.Articles.Edit;
+namespace SimpleCMS.Blazor.Pages.Articles.Add;
 
-public partial class EditArticle
+public partial class AddArticle
 {
-    public EditArticle() { }
+    public AddArticle()
+    {
 
-    [Parameter]
-    public Guid Id { get; set; }
-    
+    }
     [Inject]
-    public ICmsContentAppService CmsContentAppService { get; set; }
+    private ICmsContentAppService CmsContentAppService { get; set; }
 
     [Inject]
     public IStringLocalizer<SimpleCMSResource> L { get; set; }
@@ -29,38 +28,37 @@ public partial class EditArticle
     [Inject]
     public AbpBlazorMessageLocalizerHelper<SimpleCMSResource> LH { get; set; }
 
-    [Inject] 
+    [Inject]
     public IMessageService MessageService { get; set; }
-    
+
     [Inject]
     protected NavigationManager navigationManager { get; set; }
-
-    public CreateUpdateCmsContentDto Article { get; set; }
-    public CreateUpdateCmsContentDto ArticleUpdates { get; set; }
+    public CreateUpdateCmsContentDto NewArticle { get; set; } = new CreateUpdateCmsContentDto();
 
     public IReadOnlyList<AuthorLookupDto> authorList = Array.Empty<AuthorLookupDto>();
 
-    public bool IsLoading;
+    #region RichTextEdit
     protected RichTextEdit richTextEditRef;
     protected bool readOnly;
     protected string contentAsHtml;
     protected string contentAsDeltaJson;
     protected string contentAsText;
+    #endregion
+    public bool IsLoading;
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
             IsLoading = true;
-            Article = await CmsContentAppService.GetCmsContentAsync(Id);
+            await base.OnInitializedAsync();
+            NewArticle.AuthorId = Guid.NewGuid();
             authorList = (await CmsContentAppService.GetAuthorLookupAsync()).Items;
         }
         catch (Exception ex)
         {
             await MessageService.Error($"Inner Exception error occurred: {ex.Message}", "Error");
             Console.WriteLine(ex.Message);
-            IsLoading = false;
-            StateHasChanged();
         }
     }
 
@@ -74,14 +72,11 @@ public partial class EditArticle
                 IsLoading = false;
                 StateHasChanged();
             }
-            
         }
         catch (Exception ex)
         {
-            await MessageService.Error($"Inner Exception error occurred: {ex.Message}","Error");
+            await MessageService.Error($"Inner Exception error occurred: {ex.Message}", "Error");
             Console.WriteLine(ex.Message);
-            IsLoading = false;
-            StateHasChanged();
         }
     }
     public async Task OnContentChanged()
@@ -93,51 +88,32 @@ public partial class EditArticle
 
     public async Task OnSave()
     {
-        Article.Content = await richTextEditRef.GetHtmlAsync();
+        NewArticle.Content = await richTextEditRef.GetHtmlAsync();
     }
 
-    public async Task UpdateArticleAsync()
+    public async Task CreateArticleAsync()
     {
         try
         {
             await OnSave();
-            await CmsContentAppService.InsertOrUpdateCmsContentAsync(Article);
+            NewArticle.FeaturedImage = "https://placeholder.co/500";
+            await CmsContentAppService.InsertOrUpdateCmsContentAsync(NewArticle);
             await MessageService.Success("", "Changes successfully saved.");
             await Task.Delay(3000);
-            navigationManager.NavigateTo($"/articles/{Id}");
+            navigationManager.NavigateTo($"/");
             StateHasChanged();
         }
         catch (Exception ex)
         {
             await MessageService.Error($"Inner Exception error occurred: {ex.Message}", "Error");
-            Console.WriteLine($"An error occurred while saving changes. /n" +
-                $"Inner exception: {ex.Message}");
+            Console.WriteLine(ex.Message);
         }
     }
-
     public async Task ConfirmCancel()
     {
         if (await MessageService.Confirm("Your changes will not be saved", "Are you sure you want to cancel?"))
         {
-            navigationManager.NavigateTo($"/articles/{Id}");
-        }
-    }
-
-    public async Task DeleteArticle()
-    {
-        try
-        {
-            if (await MessageService.Confirm("This cannot be undone.", "Are you sure you want to delete this article?"))
-            {
-                await CmsContentAppService.DeleteAsync(Id);
-                navigationManager.NavigateTo($"/");
-            }
-        }
-        catch (Exception ex)
-        {
-            await MessageService.Error($"Inner Exception error occurred: {ex.Message}", "Error");
-            Console.WriteLine($"An error occurred while deleting the article. /n" +
-                $"Inner exception: {ex.Message}");
+            navigationManager.NavigateTo($"/");
         }
     }
 }
