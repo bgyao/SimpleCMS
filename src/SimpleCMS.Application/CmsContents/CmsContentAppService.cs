@@ -68,8 +68,16 @@ public class CmsContentAppService : CrudAppService<
 
     public async Task<CreateUpdateCmsContentDto> GetCmsContentAsync(Guid id)
     {
-        var query = await GetAsync(id);
-        return MapInputForUpdating(query);
+        try
+        {
+            var query = await GetAsync(id);
+            return MapInputForUpdating(query);
+        }
+        catch(Exception ex)
+        {
+            ExceptionHandler(ex);
+            return new CreateUpdateCmsContentDto();
+        }
     }
     public async Task<GetAllCmsContentDetailsDto> GetAllCmsContentDetailsAsync(PagedAndSortedResultRequestDto input)
     {
