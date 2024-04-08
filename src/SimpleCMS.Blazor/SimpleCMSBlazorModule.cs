@@ -43,6 +43,8 @@ using Volo.Abp.UI;
 using Volo.Abp.UI.Navigation;
 using Volo.Abp.UI.Navigation.Urls;
 using Volo.Abp.VirtualFileSystem;
+using Blazorise.RichTextEdit;
+using Blazorise;
 
 namespace SimpleCMS.Blazor;
 
@@ -195,7 +197,8 @@ public class SimpleCMSBlazorModule : AbpModule
     {
         context.Services
             .AddBootstrap5Providers()
-            .AddFontAwesomeIcons();
+            .AddFontAwesomeIcons()
+            .AddBlazoriseRichTextEdit();
     }
 
     private void ConfigureMenu(ServiceConfigurationContext context)

@@ -64,10 +64,12 @@ public class CmsContentAppService : CrudAppService<
             ExceptionHandler(ex);
             return new CmsContentDto();
         }
-        finally
-        {
-            Console.WriteLine("An error occurred while retrieving the article.");
-        }
+    }
+
+    public async Task<CreateUpdateCmsContentDto> GetCmsContentAsync(Guid id)
+    {
+        var query = await GetAsync(id);
+        return MapInputForUpdating(query);
     }
     public async Task<GetAllCmsContentDetailsDto> GetAllCmsContentDetailsAsync(PagedAndSortedResultRequestDto input)
     {
@@ -108,10 +110,6 @@ public class CmsContentAppService : CrudAppService<
             ExceptionHandler(ex);
             return new GetAllCmsContentDetailsDto(0, new List<CmsContentDetailDto>());
         }
-        finally
-        {
-            Console.WriteLine("An error occurred while retrieving content/s.");
-        }
     }
 
     public async Task InsertOrUpdateCmsContentAsync(CreateUpdateCmsContentDto input)
@@ -130,10 +128,6 @@ public class CmsContentAppService : CrudAppService<
         catch (Exception ex)
         {
             ExceptionHandler(ex);
-        }
-        finally
-        {
-            Console.WriteLine("An error occurred while saving changes.");
         }
     }
 
@@ -170,12 +164,17 @@ public class CmsContentAppService : CrudAppService<
         await _repository.UpdateAsync(updateCmsContent);
     }
 
+    private CreateUpdateCmsContentDto MapInputForUpdating(CmsContentDto input)
+    {
+        return ObjectMapper.Map<CmsContentDto, CreateUpdateCmsContentDto>(input);
+    }
     private CmsContent MapToCmsContent(CreateUpdateCmsContentDto input)
     {
         return new CmsContent
         {
             Title = input.Title,
             Subtitle = input.Subtitle,
+            AuthorId = input.AuthorId,
             Content = input.Content,
             PublishDate = input.PublishDate,
             FeaturedImage = input.FeaturedImage,
@@ -185,6 +184,7 @@ public class CmsContentAppService : CrudAppService<
 
     private void MapInputToCmsContent(CreateUpdateCmsContentDto input, CmsContent cmsContent)
     {
+        cmsContent.AuthorId = input.AuthorId;
         cmsContent.Title = input.Title;
         cmsContent.Subtitle = input.Subtitle;
         cmsContent.Content = input.Content;

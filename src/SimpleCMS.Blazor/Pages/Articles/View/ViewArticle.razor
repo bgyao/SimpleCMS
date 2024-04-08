@@ -1,15 +1,15 @@
 ﻿@page "/articles/{Id:guid}"
 
 <article>
-    @*if (IsLoading)
+    @if (IsLoading)
     {
         
     }
     else if (Article is null)
     {
-        <p>The article you are trying to access is not found.</p>
-    }*@
-    @if (Article is not null)
+        <p>@L["ArticleNotFound"]</p>
+    }
+    else
     {
         <div id="article-content-details" class="text-center">
             <h2>@Article.Title</h2>
@@ -25,17 +25,17 @@
             <img id="article-content-image" src="@Article.FeaturedImage" alt="" />
         </figure>
 
-        <div>
-            <p id="article-content-text">@Article.Content</p>
+        <div id ="article-content-text">
+            @((MarkupString)Article.Content)
         </div>
-    }
-    else
-    {
-        <p>The article you are trying to access is not found.</p>
     }
 </article>
 
+
+
 @if (CurrentUser.IsAuthenticated)
 {
-    <p><a href="/edit/@Id">Edit</a> | Delete</p>
+    <p>
+        <a href="/edit/@Id">Edit</a>
+    </p>
 }

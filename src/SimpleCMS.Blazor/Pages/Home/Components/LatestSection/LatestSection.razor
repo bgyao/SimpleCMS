@@ -20,7 +20,7 @@
                         <div class="latest-details-container d-inline-block">
                             <h4>@article.Title</h4>
                             <h5>@article.Subtitle</h5>
-                            <p>by Ofw Gamer <span class="article-date">@article.PublishDate.Date.ToLongDateString()</span></p>
+                            <p>by @article.AuthorName <span class="article-date">@article.PublishDate.Date.ToLongDateString()</span></p>
                         </div>
                         @if (!article.FeaturedImage.IsNullOrEmpty())
                         {
