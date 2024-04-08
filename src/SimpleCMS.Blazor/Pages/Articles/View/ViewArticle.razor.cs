@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Localization;
 using Microsoft.JSInterop;
 using SimpleCMS.CmsContents;
 using SimpleCMS.CmsContents.Dtos;
+using SimpleCMS.Localization;
 using System;
 using System.Threading.Tasks;
 using Volo.Abp.Users;
@@ -23,6 +25,9 @@ public partial class ViewArticle
 
     [Inject]
     public ICurrentUser CurrentUser { get; set; }
+
+    [Inject]
+    public IStringLocalizer<SimpleCMSResource> L { get; set; }
 
     public bool IsLoading = true;
 

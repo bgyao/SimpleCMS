@@ -1,3 +1,165 @@
 ﻿@page "/edit/{Id:guid}"
+@using Blazorise.RichTextEdit
+@using SimpleCMS.CmsContents
+@using SimpleCMS.CmsContents.Dtos
+@using Volo.Abp.Application.Dtos
 @attribute [Authorize()]
+@inherits AbpCrudPageBase<ICmsContentAppService, CmsContentDto, Guid, PagedAndSortedResultRequestDto, CreateUpdateCmsContentDto>
 
+@if (IsLoading)
+{
+    
+}
+else if(EditingEntity is null)
+{
+    <p>@L["ArticleNotFound"]</p>
+}
+else
+{
+    <EditForm Model="EditingEntity">
+        <DataAnnotationsValidator />
+                @* TITLE FIELD *@
+                <Field>
+                    <FieldLabel>@L["CMSContent:Title"]</FieldLabel>
+                    <TextEdit @bind-Text="@EditingEntity.Title">
+                        <Feedback>
+                            <ValidationMessage For="@(() => EditingEntity.Title)" />
+                        </Feedback>
+                    </TextEdit>
+                    
+                </Field>
+
+                @* SUBTITLE FIELD *@
+                <Field>
+                    <FieldLabel>@L["CMSContent:Subtitle"]</FieldLabel>
+                    <TextEdit @bind-Text="@EditingEntity.Subtitle">
+                        <Feedback>
+                            <ValidationMessage For="@(() => EditingEntity.Subtitle)" />
+                        </Feedback>
+                    </TextEdit>
+            
+                </Field>
+
+                @* AUTHOR FIELD *@
+                <Field>
+                    <FieldLabel>@L["Author"]</FieldLabel>
+                    <Select TValue="Guid" @bind-SelectedValue="@EditingEntity.AuthorId">
+                        @foreach (var author in authorList)
+                        {
+                            <SelectItem TValue="Guid" Value="@author.Id">
+                                @author.Name
+                            </SelectItem>
+                        }
+                    </Select>
+                </Field>
+
+                @* PUBLISHDATE FIELD *@
+                <Field>
+                    <FieldLabel>@L["CMSContent:DatePublished"]</FieldLabel>
+                    <DateEdit TValue="DateTime" @bind-Date="EditingEntity.PublishDate" />
+                </Field>
+
+                @* CONTENT FIELD*@
+                <Field>
+                    <FieldLabel>@L["CMSContent:Content"]</FieldLabel>
+                    <RichTextEdit @ref="richTextEditRef"
+                                  Theme="RichTextEditTheme.Snow"
+                                  ContentChanged="@OnContentChanged"
+                                  PlaceHolder="Type your post here..."
+                                  ReadOnly="@readOnly"
+                                  SubmitOnEnter="false"
+                                  EnterPressed="@OnSave"
+                                  ToolbarPosition="Placement.Bottom">
+                        <Editor>@EditingEntity.Content</Editor>
+                        <Toolbar>
+                            <RichTextEditToolbarGroup>
+                                @* Font styling options*@
+                                <RichTextEditToolbarSelect Action="RichTextEditAction.Header">
+                                    <RichTextEditToolbarSelectItem Value="1" />
+                                    <RichTextEditToolbarSelectItem Value="2" />
+                                    <RichTextEditToolbarSelectItem Value="3" />
+                                    <RichTextEditToolbarSelectItem Selected >Text</RichTextEditToolbarSelectItem>
+                                </RichTextEditToolbarSelect>
+                                @* Font Size Options *@
+                                <RichTextEditToolbarSelect Action="RichTextEditAction.Size">
+                                    <RichTextEditToolbarSelectItem Value="small" />
+                                    <RichTextEditToolbarSelectItem Selected />
+                                    <RichTextEditToolbarSelectItem Value="large" />
+                                    <RichTextEditToolbarSelectItem Value="huge" />
+                                </RichTextEditToolbarSelect>
+                            </RichTextEditToolbarGroup>
+                            <RichTextEditToolbarGroup>
+                                @* Text Formatting Options *@
+                                <RichTextEditToolbarButton Action="RichTextEditAction.Bold" />
+                                <RichTextEditToolbarButton Action="RichTextEditAction.Italic" />
+                                <RichTextEditToolbarButton Action="RichTextEditAction.Underline" />
+                            </RichTextEditToolbarGroup>
+                            <RichTextEditToolbarGroup>
+
+                                @* List Options *@
+                                <RichTextEditToolbarButton Action="RichTextEditAction.List" Value="ordered" />
+                                <RichTextEditToolbarButton Action="RichTextEditAction.List" Value="bullet" />
+
+                                @* Text Alignment *@
+                                <RichTextEditToolbarSelect Action="RichTextEditAction.Align">
+                                    <RichTextEditToolbarSelectItem Selected />
+                                    <RichTextEditToolbarSelectItem Value="center" />
+                                    <RichTextEditToolbarSelectItem Value="right" />
+                                    <RichTextEditToolbarSelectItem Value="justify" />
+                                </RichTextEditToolbarSelect>
+                                <RichTextEditToolbarButton Action="RichTextEditAction.Blockquote" />
+                            </RichTextEditToolbarGroup>
+                            <RichTextEditToolbarGroup>
+                                <RichTextEditToolbarButton Action="RichTextEditAction.Link" />
+                                <RichTextEditToolbarButton Action="RichTextEditAction.Image" Display="Display.None" />
+                            </RichTextEditToolbarGroup>
+                            <!-- Custom toolbar content -->
+                            <RichTextEditToolbarGroup Float="Float.End">
+                                <Button onClick="window.open('https://www.quilljs.com/','quilljs')"><i class="fa fa-info-circle" aria-hidden="true"></i></Button>
+                                @*<Button Clicked="@OnSave"><i class="fas fa-save"></i></Button>*@
+                            </RichTextEditToolbarGroup>
+                        </Toolbar>
+                    </RichTextEdit>
+                    <ValidationMessage For="@(() => EditingEntity.Content)" />
+                </Field>
+
+                @* ISFEATURED FIELD*@
+                <Field>
+                    <Check TValue="bool" @bind-checked="@EditingEntity.IsFeatured">@L["CMSContent:IsFeatured"]</Check>
+                </Field>
+
+        <Button Color="Color.Secondary"
+                Clicked="CloseEditModalAsync">
+            @*change to a different function*@
+            @L["Cancel"]
+        </Button>
+        <Button Color="Color.Primary"
+                Type="@ButtonType.Submit"
+                PreventDefaultOnSubmit="true"
+                @onclick="UpdateArticleAsync"> @*change to a different function*@
+            @L["Save"]
+        </Button>
+    </EditForm>
+}
+
+@code{
+    protected RichTextEdit richTextEditRef;
+    protected bool readOnly;
+    protected string contentAsHtml;
+    protected string contentAsDeltaJson;
+    protected string contentAsText;
+    protected string savedContent;
+
+    public async Task OnContentChanged()
+    {
+        contentAsHtml = await richTextEditRef.GetHtmlAsync();
+        contentAsDeltaJson = await richTextEditRef.GetDeltaAsync();
+        contentAsText = await richTextEditRef.GetTextAsync();
+    }
+
+    public async Task OnSave()
+    {
+        savedContent = await richTextEditRef.GetHtmlAsync();
+        await richTextEditRef.ClearAsync();
+    }
+}

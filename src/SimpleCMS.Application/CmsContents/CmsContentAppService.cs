@@ -170,6 +170,10 @@ public class CmsContentAppService : CrudAppService<
         await _repository.UpdateAsync(updateCmsContent);
     }
 
+    public CreateUpdateCmsContentDto MapInputForUpdating(CmsContentDto input)
+    {
+        return ObjectMapper.Map<CmsContentDto, CreateUpdateCmsContentDto>(input);
+    }
     private CmsContent MapToCmsContent(CreateUpdateCmsContentDto input)
     {
         return new CmsContent

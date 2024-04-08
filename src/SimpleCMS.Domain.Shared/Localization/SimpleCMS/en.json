@@ -69,6 +69,14 @@
     "ShortBio": "Short Bio",
     "NewAuthor": "New author",
 
+    /* CMS Contents Localizations */
+    "CMSContent:Title": "Title",
+    "CMSContent:Subtitle": "Subtitle",
+    "CMSContent:DatePublished": "Date Published",
+    "CMSContent:IsFeatured": "Set as Featured Article",
+    "CMSContent:FeaturedImage": "Featured Image",
+    "CMSContent:Content": "Content",
+
     /* CMS Contents Permissions */
     "Permission:CMSContents": "CMS Contents",
     "Permission:CMSContentManagement": "CMS Contents Management",
@@ -81,6 +89,9 @@
 
     /* BookStore-related Errors */
     "BookStore:00001": "There is already an author with the same name: {name}",
-    "AnAuthorIsRequiredForCreatingBook": "An author is required to create a book"
+    "AnAuthorIsRequiredForCreatingBook": "An author is required to create a book",
+
+    /* CMS-related Errors */
+    "ArticleNotFound": "Oops! The article you are trying to access is not found."
   }
 }
