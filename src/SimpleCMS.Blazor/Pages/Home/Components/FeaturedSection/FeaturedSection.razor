@@ -1,18 +1,17 @@
 ﻿<section class="mb-4">
     
-    <h4>Featured</h4>
-    <hr class="mt-0" />
-
     @if (IsLoading)
     {
 
     }
     else if (ContentDetails.TotalCount == 0)
     {
-        <p>No content. Create one now.</p>
+
     }
     else
     {
+        <h4>Featured</h4>
+        <hr class="mt-0" />
         @foreach (var featuredArticle in FeaturedArticles)
         {
             <a href="/articles/@featuredArticle.Id">

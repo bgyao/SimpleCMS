@@ -32,10 +32,11 @@
 </article>
 
 
-
+<p>
+    <a href="/">Return to Home</a>
 @if (CurrentUser.IsAuthenticated)
 {
-    <p>
-        <a href="/edit/@Id">Edit</a>
-    </p>
+     <span> | </span><a href="/edit/@Id">Edit</a>
+    
 }
+</p>
